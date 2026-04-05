@@ -1,116 +1,487 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <title>Math Formula Sheet</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Fira+Code:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #ffffff;
-      --text: #111111;
-      --card: #f4f4f4;
-      --accent: #4f46e5;
+      --bg:        #0b0f1a;
+      --surface:   #111827;
+      --surface2:  #1a2335;
+      --border:    #1e2d45;
+      --accent:    #c9a84c;
+      --accent-dim:#7d6530;
+      --text:      #e2d9c8;
+      --muted:     #6b7a99;
+      --glow:      rgba(201,168,76,0.12);
     }
 
-    body.dark {
-      --bg: #0f172a;
-      --text: #e5e7eb;
-      --card: #1e293b;
-      --accent: #818cf8;
+    [data-theme="light"] {
+      --bg:        #f5f0e8;
+      --surface:   #fffdf6;
+      --surface2:  #f0ead8;
+      --border:    #ddd5be;
+      --accent:    #8b5e1a;
+      --accent-dim:#c69c50;
+      --text:      #1a1610;
+      --muted:     #7a6f5e;
+      --glow:      rgba(139,94,26,0.10);
     }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'DM Sans', sans-serif;
       background: var(--bg);
       color: var(--text);
-      transition: 0.3s;
+      min-height: 100vh;
+      transition: background 0.4s, color 0.4s;
+      overflow-x: hidden;
     }
 
-    .container {
-      max-width: 800px;
-      margin: auto;
-      padding: 40px 20px;
-      text-align: center;
+    /* ── Background texture ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(201,168,76,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(99,120,180,0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 48px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 100%;
+      gap: 16px;
+    }
+
+    .eyebrow {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--accent);
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
     }
 
-    h2 {
-      margin-top: 30px;
-      margin-bottom: 20px;
+    h1 em {
+      font-style: italic;
       color: var(--accent);
     }
 
-    .sections {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 300;
+      margin-top: 4px;
     }
 
+    /* ── Theme toggle ── */
+    .toggle-btn {
+      flex-shrink: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      margin-top: 6px;
+    }
+
+    .toggle-btn:hover {
+      background: var(--surface2);
+      border-color: var(--accent-dim);
+      transform: scale(1.05);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent-dim), var(--border) 60%, transparent);
+      margin-bottom: 32px;
+      animation: fadeUp 0.6s 0.1s ease both;
+      opacity: 0;
+      animation-fill-mode: forwards;
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      animation: fadeUp 0.6s 0.2s ease both;
+      opacity: 0;
+      animation-fill-mode: forwards;
+    }
+
+    .search-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px 10px 40px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-input::placeholder { color: var(--muted); }
+
+    .search-input:focus {
+      border-color: var(--accent-dim);
+      box-shadow: 0 0 0 3px var(--glow);
+    }
+
+    .count-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+      padding: 8px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .count-badge span {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    /* ── Cards ── */
     .card {
-      background: var(--card);
-      padding: 20px;
-      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 22px 20px;
       text-decoration: none;
       color: var(--text);
-      font-size: 1.2rem;
-      transition: 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.22s, border-color 0.22s, box-shadow 0.22s;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--glow), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s;
     }
 
     .card:hover {
-      transform: translateY(-5px);
-      background: var(--accent);
-      color: white;
+      transform: translateY(-4px);
+      border-color: var(--accent-dim);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.25), 0 0 0 1px var(--accent-dim);
     }
 
-    .toggle {
-      position: fixed;
+    .card:hover::before { opacity: 1; }
+
+    .card-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      line-height: 1.2;
+    }
+
+    .card-meta {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: auto;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-arrow {
+      position: absolute;
       top: 20px;
       right: 20px;
-      background: var(--card);
-      border: none;
-      padding: 10px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
+      font-size: 0.85rem;
+      color: var(--muted);
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .card:hover .card-arrow {
+      color: var(--accent);
+      transform: translate(2px, -2px);
+    }
+
+    /* ── Hidden state ── */
+    .card.hidden {
+      display: none;
+    }
+
+    /* ── No results ── */
+    .no-results {
+      display: none;
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 48px 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .no-results.visible { display: block; }
+
+    /* ── Stagger delays ── */
+    .card:nth-child(1)  { animation-delay: 0.25s; }
+    .card:nth-child(2)  { animation-delay: 0.32s; }
+    .card:nth-child(3)  { animation-delay: 0.39s; }
+    .card:nth-child(4)  { animation-delay: 0.46s; }
+    .card:nth-child(5)  { animation-delay: 0.53s; }
+    .card:nth-child(6)  { animation-delay: 0.60s; }
+    .card:nth-child(7)  { animation-delay: 0.67s; }
+    .card:nth-child(8)  { animation-delay: 0.74s; }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      animation: fadeUp 0.6s 0.8s ease both;
+      opacity: 0;
+      animation-fill-mode: forwards;
+    }
+
+    /* ── Keyframes ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 500px) {
+      .page { padding: 40px 16px 60px; }
+      .grid { grid-template-columns: 1fr 1fr; }
+      .footer { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 
 <body>
 
-<button class="toggle" onclick="toggleMode()">🌙 Toggle</button>
+<div class="page">
 
-<div class="container">
-  <h1>📘 Math Formula Sheet</h1>
-  <p>Quick revision for CP & exams</p>
-
-  <h2>Sections</h2>
-
-  <div class="sections">
-    <a class="card" href="combinatorics.html">Combinatorics</a>
-    <a class="card" href="number_theory.html">Number Theory</a>
-    <a class="card" href="probability.html">Probability</a>
-    <a class="card" href="algebra.html">Algebra</a>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="eyebrow">Reference Sheet</div>
+        <h1><em>Math</em> Formula Sheet</h1>
+        <p class="subtitle">Competitive Programming &amp; Exam Revision</p>
+      </div>
+      <button class="toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
+        <span id="themeIcon">☀️</span>
+      </button>
+    </div>
   </div>
+
+  <div class="divider"></div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search topics…"
+        id="searchInput"
+        oninput="filterCards()"
+        autocomplete="off"
+        spellcheck="false"
+      >
+    </div>
+    <div class="count-badge">
+      <span id="visibleCount">4</span> / 4 topics
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid" id="grid">
+
+    <a class="card" href="combinatorics.html" data-title="combinatorics">
+      <div class="card-icon">🧮</div>
+      <div class="card-title">Combinatorics</div>
+      <div class="card-meta">permutations · combinations · pigeonhole</div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <a class="card" href="number_theory.html" data-title="number theory">
+      <div class="card-icon">∞</div>
+      <div class="card-title">Number Theory</div>
+      <div class="card-meta">primes · gcd · modular arithmetic</div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <a class="card" href="probability.html" data-title="probability">
+      <div class="card-icon">🎲</div>
+      <div class="card-title">Probability</div>
+      <div class="card-meta">bayes · distributions · expectation</div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <a class="card" href="algebra.html" data-title="algebra">
+      <div class="card-icon">𝑥</div>
+      <div class="card-title">Algebra</div>
+      <div class="card-meta">polynomials · matrices · sequences</div>
+      <span class="card-arrow">↗</span>
+    </a>
+
+    <div class="no-results" id="noResults">No topics match "<span id="noResultsQuery"></span>"</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>math-formula-sheet</span>
+    <span>last updated 2025</span>
+  </div>
+
 </div>
 
 <script>
-  function toggleMode() {
-    document.body.classList.toggle("dark");
-    localStorage.setItem("theme",
-      document.body.classList.contains("dark") ? "dark" : "light"
-    );
+  // ── Theme ──────────────────────────────────────────────
+  const root = document.documentElement;
+  const icon = document.getElementById('themeIcon');
+
+  function applyTheme(t) {
+    root.setAttribute('data-theme', t);
+    icon.textContent = t === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('theme', t);
   }
 
-  // Load saved theme
-  if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark");
+  function toggleTheme() {
+    applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  }
+
+  // Init theme
+  applyTheme(localStorage.getItem('theme') || 'dark');
+
+  // ── Search / Filter ────────────────────────────────────
+  const totalCount = document.querySelectorAll('.card[data-title]').length;
+  document.getElementById('visibleCount').textContent = totalCount;
+  document.querySelector('.count-badge').innerHTML =
+    `<span id="visibleCount">${totalCount}</span>&nbsp;/ ${totalCount} topics`;
+
+  function filterCards() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.card[data-title]');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const title    = card.dataset.title || '';
+      const meta     = card.querySelector('.card-meta')?.textContent?.toLowerCase() || '';
+      const matches  = !q || title.includes(q) || meta.includes(q);
+      card.classList.toggle('hidden', !matches);
+      if (matches) visible++;
+    });
+
+    document.getElementById('visibleCount').textContent = visible;
+
+    const noRes = document.getElementById('noResults');
+    document.getElementById('noResultsQuery').textContent = q;
+    noRes.classList.toggle('visible', visible === 0 && q.length > 0);
   }
 </script>
 
