@@ -1,197 +1,331 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
+  <title>Subject Index | Academic Repository</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vasu Ganesha | Portfolio</title>
-  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Fira+Code:wght@400;500&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+
   <style>
-    /* Theme Variables */
     :root {
-      /* Dark Mode (Default) */
-      --bg: #0f172a;
-      --surface: #1e293b;
-      --surface-hover: #334155;
-      --border: #334155;
-      --text-main: #f1f5f9;
-      --text-dim: #94a3b8;
-      --accent: #d4af37; /* Sophisticated Gold */
-      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --bg:        #080a0f;
+      --surface:   #111827;
+      --surface2:  #1e293b;
+      --border:    #1e2d45;
+      --accent:    #d4af37;
+      --accent-dim:#997a23;
+      --text:      #f1f5f9;
+      --muted:     #94a3b8;
+      --glow:      rgba(212, 175, 55, 0.08);
     }
 
     [data-theme="light"] {
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --surface-hover: #f1f5f9;
-      --border: #e2e8f0;
-      --text-main: #1e293b;
-      --text-dim: #64748b;
-      --accent: #b8860b;
+      --bg:        #fcfaf7;
+      --surface:   #ffffff;
+      --surface2:  #f3f4f6;
+      --border:    #e2e8f0;
+      --accent:    #926a11;
+      --accent-dim:#b8860b;
+      --text:      #0f172a;
+      --muted:     #64748b;
+      --glow:      rgba(184, 134, 11, 0.05);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background-color: var(--bg);
-      color: var(--text-main);
-      transition: var(--transition);
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
+      transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      line-height: 1.6;
     }
 
-    /* Header & Toggle */
-    header {
-      width: 100%;
-      max-width: 800px;
+    /* Ambient background */
+    .ambient-light {
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 10% 10%, var(--glow) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, var(--glow) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 80px 32px;
+    }
+
+    /* Header */
+    .header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 60px;
+      align-items: flex-end;
+      margin-bottom: 48px;
+      animation: fadeUp 0.8s ease-out;
+    }
+
+    .eyebrow {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
     }
 
     h1 {
-      font-size: 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 8vw, 4rem);
       font-weight: 600;
-      letter-spacing: -0.025em;
-      color: var(--accent);
+      line-height: 1;
     }
 
-    .theme-toggle {
+    h1 em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--accent);
+      padding-right: 4px;
+    }
+
+    .toggle-btn {
       background: var(--surface);
       border: 1px solid var(--border);
-      color: var(--text-main);
-      padding: 8px 16px;
-      border-radius: 20px;
+      color: var(--text);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
       cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: var(--transition);
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    .theme-toggle:hover {
+    .toggle-btn:hover {
       border-color: var(--accent);
+      transform: rotate(15deg);
     }
 
-    /* Grid Layout */
-    .section-title {
+    /* Search & Filter Bar */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 56px;
+      animation: fadeUp 0.8s 0.2s ease-out both;
+    }
+
+    .search-container {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-input {
       width: 100%;
-      max-width: 800px;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-      margin-bottom: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 14px 14px 46px;
+      font-size: 0.95rem;
+      color: var(--text);
+      transition: all 0.3s ease;
     }
 
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-dim);
+      box-shadow: 0 0 0 4px var(--glow);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      width: 18px;
+    }
+
+    /* Grid & Cards */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 20px;
-      width: 100%;
-      max-width: 800px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
     }
 
-    /* Mature Card Design */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      padding: 24px;
-      border-radius: 12px;
+      border-radius: 16px;
+      padding: 32px;
       text-decoration: none;
-      color: var(--text-main);
-      transition: var(--transition);
+      color: var(--text);
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      animation: fadeUp 0.8s both;
     }
 
     .card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent);
-      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.3);
+      transform: translateY(-8px);
+      border-color: var(--accent-dim);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     }
 
-    .card h3 {
-      font-size: 1.1rem;
-      font-weight: 500;
+    .card-icon {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      opacity: 0.8;
     }
 
-    .card p {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      line-height: 1.5;
-    }
-
-    .card-footer {
-      margin-top: 12px;
-      font-size: 0.75rem;
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
       font-weight: 600;
-      color: var(--accent);
-      opacity: 0;
-      transition: var(--transition);
+      margin-bottom: 8px;
     }
 
-    .card:hover .card-footer {
-      opacity: 1;
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      font-weight: 300;
+    }
+
+    .card-tags {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-top: auto;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: var(--glow);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .no-results {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 60px;
+      color: var(--muted);
+      display: none;
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .page { padding: 40px 20px; }
+      .header { flex-direction: column; align-items: flex-start; gap: 20px; }
+      .grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
-<body data-theme="dark">
 
-  <header>
-    <h1>VASU GANESHA</h1>
-    <button class="theme-toggle" id="themeToggle">
-      <span id="toggleText">Light Mode</span>
-    </button>
-  </header>
+<body>
+  <div class="ambient-light"></div>
 
-  <p class="section-title">Academic Subjects</p>
+  <div class="page">
+    <header class="header">
+      <div>
+        <div class="eyebrow">Curated Knowledge</div>
+        <h1><em>Subject</em> Index</h1>
+      </div>
+      <button class="toggle-btn" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    </header>
 
-  <div class="grid">
-    <a href="math.html" class="card">
-      <h3>Mathematics</h3>
-      <p>Discrete structures, linear algebra, and combinatorial proofs.</p>
-      <div class="card-footer">View Resources →</div>
-    </a>
+    <div class="toolbar">
+      <div class="search-container">
+        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search for subjects or topics..." oninput="filterCards()">
+      </div>
+    </div>
 
-    <a href="math.html" class="card">
-      <h3>Algorithms</h3>
-      <p>Advanced problem solving, complexity analysis, and C++ implementations.</p>
-      <div class="card-footer">View Resources →</div>
-    </a>
+    <div class="grid" id="grid">
+      <a href="math.html" class="card" data-title="math mathematics calculus linear algebra">
+        <div class="card-icon">∫</div>
+        <div class="card-title">Mathematics</div>
+        <p class="card-desc">Advanced formulas, discrete structures, and combinatorial proofs for competitive analysis.</p>
+        <div class="card-tags">
+          <span class="tag">Theory</span>
+          <span class="tag">Reference</span>
+        </div>
+      </a>
 
-    <a href="#" class="card" style="opacity: 0.6; cursor: not-allowed;">
-      <h3>System Design</h3>
-      <p>Coming soon: Architecture patterns and scalability modules.</p>
-    </a>
+      <a href="math.html" class="card" data-title="algorithm competitive programming dsa">
+        <div class="card-icon">⟨/⟩</div>
+        <div class="card-title">Algorithms</div>
+        <p class="card-desc">Computational complexity, optimization strategies, and advanced data structure implementations.</p>
+        <div class="card-tags">
+          <span class="tag">Logic</span>
+          <span class="tag">C++</span>
+        </div>
+      </a>
+
+      <a href="#" class="card" style="opacity: 0.5; pointer-events: none;">
+        <div class="card-icon">⬡</div>
+        <div class="card-title">Future Topic</div>
+        <p class="card-desc">Documentation for upcoming modules and research projects is currently being prepared.</p>
+        <div class="card-tags">
+          <span class="tag">Draft</span>
+        </div>
+      </a>
+
+      <div id="noResults" class="no-results">No subjects found matching your criteria.</div>
+    </div>
   </div>
 
   <script>
-    const toggleBtn = document.getElementById('themeToggle');
-    const body = document.body;
-    const toggleText = document.getElementById('toggleText');
-
-    toggleBtn.addEventListener('click', () => {
-      const currentTheme = body.getAttribute('data-theme');
-      if (currentTheme === 'dark') {
+    function toggleTheme() {
+      const body = document.documentElement;
+      const btn = document.getElementById('themeBtn');
+      if (body.getAttribute('data-theme') === 'dark') {
         body.setAttribute('data-theme', 'light');
-        toggleText.innerText = 'Dark Mode';
+        btn.textContent = '🌙';
       } else {
         body.setAttribute('data-theme', 'dark');
-        toggleText.innerText = 'Light Mode';
+        btn.textContent = '☀️';
       }
-    });
+    }
+
+    function filterCards() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.card');
+      const noResults = document.getElementById('noResults');
+      let found = false;
+
+      cards.forEach(card => {
+        const title = card.getAttribute('data-title') || "";
+        if (title.includes(query)) {
+          card.style.display = 'flex';
+          found = true;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      noResults.style.display = found ? 'none' : 'block';
+    }
   </script>
 </body>
 </html>
