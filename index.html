@@ -2,81 +2,196 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Vasu Ganesha</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <title>Vasu Ganesha | Portfolio</title>
+  
   <style>
+    /* Theme Variables */
     :root {
-      --bg: #0b0f1a;
-      --card: #111827;
-      --border: #1e2d45;
-      --accent: #c9a84c;
-      --text: #e2d9c8;
+      /* Dark Mode (Default) */
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #334155;
+      --border: #334155;
+      --text-main: #f1f5f9;
+      --text-dim: #94a3b8;
+      --accent: #d4af37; /* Sophisticated Gold */
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-hover: #f1f5f9;
+      --border: #e2e8f0;
+      --text-main: #1e293b;
+      --text-dim: #64748b;
+      --accent: #b8860b;
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: system-ui, sans-serif;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
 
     body {
-      background: var(--bg);
-      color: var(--text);
+      background-color: var(--bg);
+      color: var(--text-main);
+      transition: var(--transition);
+      min-height: 100vh;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      height: 100vh;
+      padding: 40px 20px;
     }
 
-    .container {
-      text-align: center;
+    /* Header & Toggle */
+    header {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 60px;
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 40px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.025em;
       color: var(--accent);
     }
 
-    .links {
+    .theme-toggle {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: var(--transition);
       display: flex;
-      gap: 30px;
-      justify-content: center;
-      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
     }
 
+    .theme-toggle:hover {
+      border-color: var(--accent);
+    }
+
+    /* Grid Layout */
+    .section-title {
+      width: 100%;
+      max-width: 800px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    /* Mature Card Design */
     .card {
-      background: var(--card);
+      background: var(--surface);
       border: 1px solid var(--border);
-      padding: 30px 50px;
+      padding: 24px;
       border-radius: 12px;
       text-decoration: none;
-      color: var(--text);
-      font-size: 1.3rem;
-      transition: all 0.25s ease;
+      color: var(--text-main);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-4px);
       border-color: var(--accent);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.3);
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .card-footer {
+      margin-top: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .card:hover .card-footer {
+      opacity: 1;
     }
   </style>
 </head>
+<body data-theme="dark">
 
-<body>
+  <header>
+    <h1>VASU GANESHA</h1>
+    <button class="theme-toggle" id="themeToggle">
+      <span id="toggleText">Light Mode</span>
+    </button>
+  </header>
 
-  <div class="container">
-    <h1>📚 Vasu Ganesha</h1>
+  <p class="section-title">Academic Subjects</p>
 
-    <div class="links">
-      <!-- Both point to math page -->
-      <a class="card" href="math.html">Math</a>
-      <a class="card" href="math.html">Algorithm</a>
-    </div>
+  <div class="grid">
+    <a href="math.html" class="card">
+      <h3>Mathematics</h3>
+      <p>Discrete structures, linear algebra, and combinatorial proofs.</p>
+      <div class="card-footer">View Resources →</div>
+    </a>
+
+    <a href="math.html" class="card">
+      <h3>Algorithms</h3>
+      <p>Advanced problem solving, complexity analysis, and C++ implementations.</p>
+      <div class="card-footer">View Resources →</div>
+    </a>
+
+    <a href="#" class="card" style="opacity: 0.6; cursor: not-allowed;">
+      <h3>System Design</h3>
+      <p>Coming soon: Architecture patterns and scalability modules.</p>
+    </a>
   </div>
 
+  <script>
+    const toggleBtn = document.getElementById('themeToggle');
+    const body = document.body;
+    const toggleText = document.getElementById('toggleText');
+
+    toggleBtn.addEventListener('click', () => {
+      const currentTheme = body.getAttribute('data-theme');
+      if (currentTheme === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        toggleText.innerText = 'Dark Mode';
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        toggleText.innerText = 'Light Mode';
+      }
+    });
+  </script>
 </body>
 </html>
