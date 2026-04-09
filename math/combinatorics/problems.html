@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>Combinatorics Problems | Academic Repository</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Fira+Code:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --surface: #111827;
+      --border: #1e2d45;
+      --accent: #c9a84c;
+      --text: #e2d9c8;
+      --muted: #6b7a99;
+      --code-bg: #080a0f;
+    }
+
+    [data-theme="light"] {
+      --bg: #f5f0e8;
+      --surface: #fffdf6;
+      --border: #ddd5be;
+      --accent: #8b5e1a;
+      --text: #1a1610;
+      --muted: #7a6f5e;
+      --code-bg: #ece5d5;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+
+    /* Navigation */
+    .nav {
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-link {
+      text-decoration: none;
+      color: var(--accent);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Content Styling */
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+    }
+
+    .problem-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      margin-top: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .meta-tags {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tag {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .problem-statement {
+      font-size: 1.15rem;
+      font-family: 'DM Sans', sans-serif;
+      margin-bottom: 30px;
+      padding-left: 20px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .solution-header {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin: 40px 0 20px;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      display: inline-block;
+    }
+
+    .proof-step {
+      margin-bottom: 25px;
+    }
+
+    .verification-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+
+    .verification-table th, .verification-table td {
+      border: 1px solid var(--border);
+      padding: 12px;
+      text-align: left;
+    }
+
+    .verification-table th {
+      background: var(--code-bg);
+      color: var(--accent);
+    }
+
+    .qed {
+      text-align: right;
+      font-style: italic;
+      color: var(--accent);
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="nav">
+    <a href="../index.html" class="back-link">← BACK TO INDEX</a>
+  </div>
+
+  <header>
+    <div class="eyebrow" style="color: var(--accent); font-family: 'Fira Code'; font-size: 0.7rem; letter-spacing: 2px;">EXERCISE 3.37</div>
+    <h1>Important Problems: Combinatorics</h1>
+    <p style="color: var(--muted);">Advanced Set Theory & Inequality Proofs</p>
+  </header>
+
+  <div class="problem-card">
+    <div class="meta-tags">
+      <span class="tag">Set Theory</span>
+      <span class="tag">Inequalities</span>
+      <span class="tag">Indicator Variables</span>
+    </div>
+
+    <div class="problem-statement">
+      There are \(N\) students at Grant High School. Let \(S(F)\) be the number of students who speak French, \(S(J)\) be the number who speak Japanese, and \(S(A)\) be the number who speak Arabic. 
+      Let \(S(AF)\) be the number who speak both French and Arabic; define \(S(AJ)\) and \(S(FJ)\) similarly. 
+      <br><br>
+      <strong>Prove that:</strong>
+      \[ 3N + S(AF) + S(AJ) + S(FJ) \ge 2S(A) + 2S(F) + 2S(J) \]
+    </div>
+
+    <h2 class="solution-header">Proof via Indicator Variables</h2>
+
+    <div class="proof-step">
+      For each student \(x\), define the indicator variables \(a_x, f_x, j_x \in \{0, 1\}\):
+      \[
+      a_x = \begin{cases} 1 & x \in A \\ 0 & x \notin A \end{cases}, \quad
+      f_x = \begin{cases} 1 & x \in F \\ 0 & x \notin F \end{cases}, \quad
+      j_x = \begin{cases} 1 & x \in J \\ 0 & x \notin J \end{cases}
+      \]
+    </div>
+
+    <div class="proof-step">
+      The set sizes can be expressed as sums over all students \(x \in \{1, \dots, N\}\):
+      \[ S(A) = \sum a_x, \quad S(AF) = \sum a_xf_x, \quad \dots \]
+      The inequality holds if it holds for every individual student \(x\):
+      \[ 3 + a_xf_x + a_xj_x + f_xj_x \ge 2(a_x + f_x + j_x) \]
+    </div>
+
+    <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Verification</h3>
+    <p>Let \(k = a_x + f_x + j_x\) be the number of languages student \(x\) speaks.</p>
+    
+    <table class="verification-table">
+      <thead>
+        <tr>
+          <th>Case (\(k\))</th>
+          <th>LHS: \(3 + \sum \text{products}\)</th>
+          <th>RHS: \(2k\)</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>\(k = 0\)</td>
+          <td>\(3 + 0 = 3\)</td>
+          <td>\(2(0) = 0\)</td>
+          <td>\(3 \ge 0\) ✓</td>
+        </tr>
+        <tr>
+          <td>\(k = 1\)</td>
+          <td>\(3 + 0 = 3\)</td>
+          <td>\(2(1) = 2\)</td>
+          <td>\(3 \ge 2\) ✓</td>
+        </tr>
+        <tr>
+          <td>\(k = 2\)</td>
+          <td>\(3 + 1 = 4\)</td>
+          <td>\(2(2) = 4\)</td>
+          <td>\(4 \ge 4\) ✓</td>
+        </tr>
+        <tr>
+          <td>\(k = 3\)</td>
+          <td>\(3 + 3 = 6\)</td>
+          <td>\(2(3) = 6\)</td>
+          <td>\(6 \ge 6\) ✓</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="proof-step">
+      <strong>Alternative Non-negative Expression:</strong><br>
+      Observe that \((1-a_x)(1-f_x) + (1-a_x)(1-j_x) + (1-f_x)(1-j_x) \ge 0\) because each term is a product of non-negative integers. 
+      Expanding this yields the desired local inequality.
+    </div>
+
+    <div class="qed">Hence proved. ■</div>
+  </div>
+</div>
+
+</body>
+</html>
