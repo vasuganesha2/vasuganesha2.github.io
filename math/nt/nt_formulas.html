@@ -1,4 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>Number Theory — Formula Sheet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Fira+Code:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <script>
+    (function () {
+      var t = 'dark';
+      try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+  <style>
+    :root {
+      --bg: #0b0d17;
+      --card: #12142a;
+      --head: #1a1d38;
+      --box: #0a0c16;
+      --border: #23274a;
+      --accent: #c9a84c;
+      --accent-dim: #6e5a2a;
+      --text: #e4dccb;
+      --muted: #7b84a8;
+      --ok: #5fbf8a;
+      --bad: #d9726b;
+    }
+    [data-theme="light"] {
+      --bg: #f6f1e7;
+      --card: #fffdf7;
+      --head: #f0e9d6;
+      --box: #faf6ea;
+      --border: #ddd4bd;
+      --accent: #8b5e1a;
+      --accent-dim: #c9a45e;
+      --text: #1b1710;
+      --muted: #7a705f;
+      --ok: #2f8a57;
+      --bad: #b8433b;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background .3s, color .3s;
+      overflow-x: hidden;
+    }
+
+    .page { max-width: 820px; margin: 0 auto; padding: 40px 24px 72px; }
+
+    .topnav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px; }
+    .back-link {
+      font-family: 'Fira Code', monospace; font-size: .75rem; letter-spacing: .06em;
+      color: var(--muted); text-decoration: none; transition: color .2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .icon-btn {
+      width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: .9rem;
+      background: var(--card); border: 1px solid var(--border); color: var(--text);
+      transition: border-color .2s;
+    }
+    .icon-btn:hover { border-color: var(--accent-dim); }
+
+    /* header */
+    .eyebrow {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+      font-family: 'Fira Code', monospace; font-size: .7rem; letter-spacing: .16em;
+      text-transform: uppercase; color: var(--accent);
+    }
+    .eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    h1 {
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 700;
+      font-size: clamp(2.4rem, 6vw, 3.4rem); line-height: 1.1; color: var(--accent);
+    }
+    .sub { margin-top: 10px; font-size: .9rem; color: var(--muted); font-weight: 300; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+    .tag {
+      font-family: 'Fira Code', monospace; font-size: .65rem; letter-spacing: .08em; color: var(--accent);
+      border: 1px solid var(--accent-dim); border-radius: 20px; padding: 2px 10px;
+    }
+    .rule { height: 1px; margin: 30px 0 32px; background: linear-gradient(90deg, var(--accent-dim), var(--border) 60%, transparent); }
+
+    /* cards */
+    .card {
+      margin-bottom: 16px; background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+    }
+    .card-head {
+      display: flex; align-items: center; gap: 14px; width: 100%;
+      padding: 18px 24px; background: var(--head); border: 0; border-bottom: 1px solid var(--border);
+      color: inherit; font: inherit; text-align: left; cursor: pointer;
+    }
+    .card.collapsed .card-head { border-bottom-color: transparent; }
+    .card-head:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .num { font-family: 'Fira Code', monospace; font-size: .68rem; color: var(--accent); letter-spacing: .1em; }
+    .card-title { flex: 1; font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; }
+    .chev { color: var(--muted); font-size: .7rem; transition: transform .2s; }
+    .card.collapsed .chev { transform: rotate(-90deg); }
+
+    .card-body { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .25s ease; }
+    .card.collapsed .card-body { grid-template-rows: 0fr; }
+    .clip { overflow: hidden; min-height: 0; }
+    .content { padding: 26px 30px 30px; display: flex; flex-direction: column; gap: 22px; }
+
+    .label { font-family: 'Fira Code', monospace; font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .rowdiv { height: 1px; background: var(--border); }
+
+    .box {
+      position: relative; background: var(--box); border: 1px solid var(--border);
+      border-radius: 12px; padding: 22px 22px; font-size: 1.05rem; overflow-x: auto; text-align: center;
+    }
+    .box.left { text-align: left; }
+    .copy {
+      position: absolute; top: 8px; right: 8px; z-index: 2;
+      font-family: 'Fira Code', monospace; font-size: .62rem; letter-spacing: .05em;
+      color: var(--muted); background: var(--card); border: 1px solid var(--border);
+      border-radius: 6px; padding: 3px 9px; cursor: pointer; transition: color .2s, border-color .2s;
+    }
+    .copy:hover { color: var(--accent); border-color: var(--accent-dim); }
+
+    .note { margin-top: 10px; font-size: .86rem; line-height: 1.75; color: var(--muted); }
+    .note strong { color: var(--text); font-weight: 500; }
+    code {
+      font-family: 'Fira Code', monospace; font-size: .78rem; color: var(--accent);
+      background: var(--head); padding: 1px 5px; border-radius: 4px;
+    }
+
+    .steps { list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 12px; font-size: .92rem; line-height: 1.7; }
+    .steps li { counter-increment: s; position: relative; padding-left: 34px; }
+    .steps li::before {
+      content: counter(s); position: absolute; left: 0; top: 2px; width: 22px; height: 22px;
+      border: 1px solid var(--accent-dim); border-radius: 50%; color: var(--accent);
+      font-family: 'Fira Code', monospace; font-size: .66rem; display: flex; align-items: center; justify-content: center;
+    }
+
+    .list { list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: .9rem; line-height: 1.7; }
+    .list li { position: relative; padding-left: 22px; }
+    .list li::before { content: '–'; position: absolute; left: 0; color: var(--accent); }
+
+    .callout { border-left: 2px solid var(--accent); padding: 4px 0 4px 16px; font-size: .86rem; line-height: 1.75; color: var(--muted); }
+    .callout b { color: var(--accent); font-weight: 500; }
+
+    /* checker */
+    .row { display: flex; gap: 8px; flex-wrap: wrap; }
+    input[type="text"] {
+      flex: 1 1 220px; min-width: 0; padding: 11px 14px; border-radius: 10px;
+      background: var(--box); color: var(--text); border: 1px solid var(--border);
+      font-family: 'Fira Code', monospace; font-size: .9rem;
+    }
+    input[type="text"]:focus { outline: none; border-color: var(--accent); }
+    .btn {
+      font-family: 'Fira Code', monospace; font-size: .72rem; letter-spacing: .06em; cursor: pointer;
+      color: var(--bg); background: var(--accent); border: 1px solid var(--accent);
+      border-radius: 10px; padding: 0 20px; font-weight: 500; min-height: 40px;
+    }
+    .btn:hover { opacity: .88; }
+    .opt { display: flex; align-items: center; gap: 8px; font-size: .82rem; color: var(--muted); }
+    .opt input { accent-color: var(--accent); }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: .78rem; color: var(--muted); }
+    .chip {
+      font-family: 'Fira Code', monospace; font-size: .66rem; color: var(--accent); cursor: pointer;
+      border: 1px solid var(--accent-dim); border-radius: 20px; padding: 3px 10px; background: transparent;
+    }
+    .chip:hover { background: var(--head); }
+    .result { padding: 14px 18px; border: 1px solid var(--border); border-radius: 12px; background: var(--box); font-size: .92rem; line-height: 1.8; overflow-x: auto; }
+    .result.ok { border-color: var(--ok); }
+    .result.bad { border-color: var(--bad); }
+    .verdict { font-weight: 500; }
+    .result.ok .verdict { color: var(--ok); }
+    .result.bad .verdict { color: var(--bad); }
+
+    .footer {
+      margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; gap: 12px;
+      font-family: 'Fira Code', monospace; font-size: .66rem; letter-spacing: .06em; color: var(--muted);
+    }
+
+    @media (prefers-reduced-motion: reduce) { * { transition-duration: .01ms !important; } }
+    @media (max-width: 540px) {
+      .page { padding: 28px 14px 56px; }
+      .card-head { padding: 16px 18px; }
+      .content { padding: 20px 16px 24px; }
+      .box { padding: 20px 12px; }
+      .footer { flex-direction: column; }
+    }
+    @media print {
+      .topnav, .copy, .checker-card { display: none !important; }
+      .card.collapsed .card-body { grid-template-rows: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <div class="topnav">
+      <a class="back-link" href="../math.html">← all topics</a>
+      <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Toggle light or dark theme">☀️</button>
+    </div>
+
+    <header>
+      <div class="eyebrow">Chapter 01</div>
+      <h1>Number Theory</h1>
+      <p class="sub">Primes, divisibility, and the irreducibility of polynomials.</p>
+      <div class="tags">
+        <span class="tag">polynomials</span>
+        <span class="tag">irreducibility</span>
+        <span class="tag">primes</span>
+        <span class="tag">gauss's lemma</span>
+      </div>
+    </header>
+
+    <div class="rule"></div>
+
+    <section class="card">
+      <button class="card-head" onclick="toggle(this)" aria-expanded="true">
+        <span class="num">01</span><span class="card-title">Eisenstein's Criterion</span><span class="chev">▼</span>
+      </button>
+      <div class="card-body"><div class="clip"><div class="content">
+        <div>
+          <div class="label">Statement</div>
+          <div class="box" data-tex="f(x)=a_nx^n+\cdots+a_1x+a_0,\quad p\nmid a_n,\ \ p\mid a_i\ (0\le i<n),\ \ p^2\nmid a_0\ \Longrightarrow\ f\text{ irreducible over }\mathbb{Q}">
+            \[ f(x)=a_nx^n+a_{n-1}x^{n-1}+\cdots+a_1x+a_0,\quad a_i\in\mathbb{Z} \]
+            \[ p\nmid a_n,\qquad p\mid a_i\ (0\le i<n),\qquad p^2\nmid a_0 \]
+            \[ \Longrightarrow\ f \text{ is irreducible over } \mathbb{Q}. \]
+          </div>
+          <p class="note">One prime \(p\) must divide every coefficient <strong>except the leading one</strong>, and \(p^2\) must not divide the constant term. The same \(p\) works for all three conditions.</p>
+        </div>
+<div class="rowdiv"></div>
+
+        <div>
+          <div class="label">Checklist</div>
+          <div class="box left" style="line-height:2">
+            <div>✓ <strong>Leading</strong> \(a_n\): not divisible by \(p\).</div>
+            <div>✓ <strong>Middle</strong> \(a_{n-1},\dots,a_1\): divisible by \(p\).</div>
+            <div>✓ <strong>Constant</strong> \(a_0\): divisible by \(p\), not by \(p^2\).</div>
+          </div>
+        </div>
+<div class="rowdiv"></div>
+
+        <div>
+          <div class="label">Mirror version</div>
+          <div class="box" data-tex="p\nmid a_0,\ \ p\mid a_i\ (1\le i\le n),\ \ p^2\nmid a_n \Longrightarrow f\text{ irreducible over }\mathbb{Q}">
+            \[ p\nmid a_0,\qquad p\mid a_i\ (1\le i\le n),\qquad p^2\nmid a_n \]
+          </div>
+          <p class="note">Eisenstein applied to the reversed polynomial \(x^nf(1/x)\). Useful when the prime sits on the leading coefficient instead.</p>
+        </div>
+<div class="rowdiv"></div>
+
+<div><div class="label">Why it works</div><ol class="steps">
+          <li><strong>Reduce to \(\mathbb{Z}[x]\).</strong> By Gauss's lemma, if \(f\) factors over \(\mathbb{Q}\), it factors over \(\mathbb{Z}\) as \(f=gh\) with \(\deg g=r\ge1\), \(\deg h=s\ge1\). (Dividing out the content keeps the hypotheses, since \(p\nmid a_n\).)</li>
+          <li><strong>Reduce mod \(p\).</strong> Only \(a_n\) survives:
+            \[ \bar g\,\bar h=\bar a_n x^n \quad\text{in }\mathbb{F}_p[x]. \]</li>
+          <li><strong>Unique factorization.</strong> So \(\bar g=ux^r\) and \(\bar h=vx^s\); degrees don't drop because \(p\nmid a_n\).</li>
+          <li><strong>Contradiction.</strong> With \(r,s\ge1\), both constant terms vanish mod \(p\), so
+            \[ p^2\mid g(0)\,h(0)=a_0, \]
+            contradicting \(p^2\nmid a_0\). \(\blacksquare\)</li>
+        </ol></div>
+<div class="rowdiv"></div>
+
+<div>
+          <div class="label">A · Direct</div>
+          <div class="box" data-tex="x^3+2x^2+4x+2">\[ x^3+2x^2+4x+2 \]</div>
+          <p class="note">Take \(p=2\): \(2\nmid1\), \(2\mid 2,4,2\), and \(4\nmid 2\). Irreducible.</p>
+        </div>
+<div class="rowdiv"></div>
+
+        <div>
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
@@ -634,6 +918,205 @@
 
     // Apply the theme immediately.
     applyTheme(localStorage.getItem('theme') || 'dark');
+  </script>
+</body>
+</html>
+
+          <div class="label">B · Roots of a prime</div>
+          <div class="box" data-tex="x^n-p">\[ x^n-p \]</div>
+          <p class="note">Middle coefficients are \(0\), constant is \(-p\), leading is \(1\). Irreducible for every \(n\), so \(\sqrt[n]{p}\) has degree exactly \(n\) over \(\mathbb{Q}\).</p>
+        </div>
+<div class="rowdiv"></div>
+
+        <div>
+          <div class="label">C · Mixed coefficients</div>
+          <div class="box" data-tex="3x^4+10x^3-15x^2+5x+20">\[ 3x^4+10x^3-15x^2+5x+20 \]</div>
+          <p class="note">\(p=5\) divides \(10,-15,5,20\) but not \(3\), and \(25\nmid 20\). Tip: the gcd of the non-leading coefficients gives the candidate primes.</p>
+        </div>
+<div class="rowdiv"></div>
+
+<div>
+          <div class="label">Translation invariance</div>
+          <div class="box" data-tex="f(x)\text{ irreducible}\iff f(x+c)\text{ irreducible}\quad(c\in\mathbb{Q})">
+            \[ f(x)\text{ irreducible}\iff f(x+c)\text{ irreducible}\qquad(c\in\mathbb{Q}) \]
+          </div>
+          <p class="note">If Eisenstein fails for \(f\), expand \(f(x+1)\), \(f(x-1)\), \(f(x+2)\), … and look for a prime. A useful strategy, not a guarantee.</p>
+        </div>
+<div class="rowdiv"></div>
+
+        <div>
+          <div class="label">Example D · cyclotomic polynomial</div>
+          <div class="box" data-tex="\Phi_p(x+1)=\frac{(x+1)^p-1}{x}=x^{p-1}+\binom{p}{p-1}x^{p-2}+\cdots+\binom{p}{2}x+p">
+            \[ \Phi_p(x+1)=\frac{(x+1)^p-1}{x}=x^{p-1}+\binom{p}{p-1}x^{p-2}+\cdots+\binom{p}{2}x+p \]
+          </div>
+          <p class="note">Each \(\binom{p}{k}\) with \(0<k<p\) is divisible by \(p\), and the constant term is \(p\). So \(\Phi_p=1+x+\cdots+x^{p-1}\) is irreducible. For \(p=5\): \(x^4+5x^3+10x^2+10x+5\).</p>
+        </div>
+<div class="rowdiv"></div>
+
+<div>
+          <div class="label">Common mistakes</div>
+          <ul class="list">
+            <li><strong>One direction only.</strong> If no prime works, you learn nothing. \(x^2+1\) is irreducible but fails as written.</li>
+            <li><strong>Integer coefficients.</strong> Clear denominators first: \(\tfrac13x^2+\tfrac12x+1\) becomes \(2x^2+3x+6\).</li>
+            <li><strong>Same prime everywhere.</strong> You can't use \(p=2\) for one condition and \(p=3\) for another.</li>
+            <li><strong>Check \(p^2\nmid a_0\).</strong> For \(x^2+4\), \(4\mid 4\), so \(p=2\) fails.</li>
+            <li><strong>\(\mathbb{Q}\) vs \(\mathbb{Z}\).</strong> \(2x+2=2(x+1)\) factors in \(\mathbb{Z}[x]\) but is irreducible in \(\mathbb{Q}[x]\); irreducibility in \(\mathbb{Z}[x]\) needs primitivity.</li>
+          </ul>
+        </div>
+<div class="rowdiv"></div>
+
+        <div>
+          <div class="label">General form</div>
+          <div class="box left">
+            Let \(R\) be an integral domain with fraction field \(K\) and prime ideal \(P\). If \(a_n\notin P\), \(a_i\in P\) for \(i<n\), and \(a_0\notin P^2\), then \(f\in R[x]\) is not a product of two non-constant polynomials in \(R[x]\). For a UFD \(R\) and primitive \(f\), it is irreducible in \(K[x]\).
+          </div>
+        </div>
+
+        <div class="callout"><b>Workflow.</b> Take the gcd of the non-leading coefficients and test its prime factors. If none works, try the reversed polynomial, then shifts \(x\pm1\), \(x\pm2\). If all fail, switch to the rational root test or factoring mod \(p\).</div>
+      </div></div></div>
+    </section>
+
+    <section class="card collapsed checker-card">
+      <button class="card-head" onclick="toggle(this)" aria-expanded="false">
+        <span class="num">02</span><span class="card-title">Eisenstein Checker</span><span class="chev">▼</span>
+      </button>
+      <div class="card-body"><div class="clip"><div class="content">
+        <p class="note" style="margin:0">Coefficients from <strong>highest degree to constant</strong>. <code>1, 2, 4, 2</code> means \(x^3+2x^2+4x+2\).</p>
+        <div class="row">
+          <input type="text" id="coeffs" value="1, 2, 4, 2" aria-label="Polynomial coefficients" autocomplete="off" spellcheck="false">
+          <button class="btn" onclick="runCheck()">check</button>
+        </div>
+        <label class="opt"><input type="checkbox" id="tryShift" checked> also try shifts \(x\mapsto x+c\), \(|c|\le10\)</label>
+        <div class="chips">
+          try:
+          <button class="chip" data-c="1, 2, 4, 2">x³+2x²+4x+2</button>
+          <button class="chip" data-c="1, 0, 0, -3">x³−3</button>
+          <button class="chip" data-c="1, 0, 1">x²+1</button>
+          <button class="chip" data-c="1, 1, 1, 1, 1">Φ₅</button>
+          <button class="chip" data-c="1, 0, 0, 0, 4">x⁴+4</button>
+        </div>
+        <div class="result" id="result" role="status" aria-live="polite">Result appears here.</div>
+      </div></div></div>
+    </section>
+
+    <div class="footer">
+      <span>number_theory.html</span>
+      <span>math · number theory</span>
+    </div>
+  </div>
+
+  <script>
+    /* theme */
+    function applyTheme(t) {
+      document.documentElement.setAttribute('data-theme', t);
+      var b = document.getElementById('themeBtn');
+      if (b) b.textContent = t === 'dark' ? '☀️' : '🌙';
+      try { localStorage.setItem('theme', t); } catch (e) {}
+    }
+    function toggleTheme() {
+      applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    }
+    applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+
+    /* cards */
+    function toggle(h) {
+      var c = h.closest('.card');
+      var collapsed = c.classList.toggle('collapsed');
+      h.setAttribute('aria-expanded', String(!collapsed));
+    }
+
+    /* copy buttons (copies LaTeX source) */
+    document.querySelectorAll('.box[data-tex]').forEach(function (box) {
+      var b = document.createElement('button');
+      b.className = 'copy'; b.textContent = 'copy';
+      b.addEventListener('click', function () {
+        var done = function () { b.textContent = 'copied'; setTimeout(function () { b.textContent = 'copy'; }, 1200); };
+        var tex = box.getAttribute('data-tex');
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(tex).then(done, done);
+        else done();
+      });
+      box.appendChild(b);
+    });
+
+    /* checker */
+    function typeset(el) { if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise([el]); }
+    function absB(x) { return x < 0n ? -x : x; }
+    function gcdB(a, b) { a = absB(a); b = absB(b); while (b) { var t = a % b; a = b; b = t; } return a; }
+
+    function primeFactors(n) {
+      if (n > 1000000000000n) return null;
+      var m = Number(n), out = [];
+      for (var d = 2; d * d <= m; d++) if (m % d === 0) { out.push(d); while (m % d === 0) m /= d; }
+      if (m > 1) out.push(m);
+      return out;
+    }
+
+    function shiftPoly(b, c) {            // b: low -> high
+      var n = b.length - 1, r = b.slice(), C = BigInt(c);
+      for (var i = 0; i < n; i++) for (var j = n - 1; j >= i; j--) r[j] += C * r[j + 1];
+      return r;
+    }
+
+    function polyTeX(b) {
+      var terms = [];
+      for (var i = b.length - 1; i >= 0; i--) {
+        var a = b[i]; if (a === 0n) continue;
+        var m = absB(a), body = i === 0 ? m.toString() : (m === 1n ? '' : m.toString()) + (i === 1 ? 'x' : 'x^{' + i + '}');
+        terms.push({ neg: a < 0n, body: body });
+      }
+      if (!terms.length) return '0';
+      return terms.map(function (t, k) { return (k === 0 ? (t.neg ? '-' : '') : (t.neg ? ' - ' : ' + ')) + t.body; }).join('');
+    }
+
+    function eisenstein(b) {
+      var n = b.length - 1, g = 0n, i;
+      for (i = 0; i < n; i++) g = gcdB(g, b[i]);
+      if (g === 0n || g === 1n) return { none: true };
+      var ps = primeFactors(g);
+      if (ps === null) return { big: true };
+      for (var k = 0; k < ps.length; k++) {
+        var p = BigInt(ps[k]);
+        if (b[n] % p !== 0n && b[0] % (p * p) !== 0n) return { p: ps[k] };
+      }
+      return { none: true };
+    }
+
+    function show(cls, html) {
+      var out = document.getElementById('result');
+      out.className = 'result ' + cls; out.innerHTML = html; typeset(out);
+    }
+
+    function runCheck() {
+      var parts = document.getElementById('coeffs').value.trim().split(/[\s,;]+/).filter(Boolean), hi;
+      try {
+        hi = parts.map(function (s) { if (!/^[+-]?\d+$/.test(s)) throw 0; return BigInt(s); });
+      } catch (e) { return show('bad', '<span class="verdict">Invalid input.</span> Use integers only, e.g. <code>1, 0, -2</code>.'); }
+      if (hi.length < 2) return show('bad', '<span class="verdict">Need degree ≥ 1.</span>');
+      if (hi[0] === 0n) return show('bad', '<span class="verdict">Leading coefficient must be nonzero.</span>');
+      if (hi.length > 41) return show('bad', '<span class="verdict">Too large.</span> Keep the degree ≤ 40.');
+
+      var b = hi.slice().reverse(), shifts = [0], big = false;
+      if (document.getElementById('tryShift').checked) for (var s = 1; s <= 10; s++) shifts.push(s, -s);
+
+      for (var k = 0; k < shifts.length; k++) {
+        var c = shifts[k], g = c === 0 ? b : shiftPoly(b, c), r = eisenstein(g);
+        if (r.big) big = true;
+        if (r.p) {
+          var msg = '<span class="verdict">Irreducible over \\(\\mathbb{Q}\\).</span><br>' + (c === 0
+            ? 'Eisenstein applies directly with \\(p=' + r.p + '\\).'
+            : 'After \\(x\\mapsto x' + (c > 0 ? '+' : '-') + Math.abs(c) + '\\): \\(' + polyTeX(g) + '\\)<br>Eisenstein applies with \\(p=' + r.p + '\\).');
+          return show('ok', msg);
+        }
+      }
+      show('bad', '<span class="verdict">Inconclusive.</span><br>No prime works' + (shifts.length > 1 ? ' for any shift tried' : ' directly') +
+        '. This does <strong>not</strong> mean the polynomial is reducible.' + (big ? '<br><em>(A gcd was too large to factor, so a prime may have been missed.)</em>' : ''));
+    }
+
+    document.getElementById('coeffs').addEventListener('keydown', function (e) { if (e.key === 'Enter') runCheck(); });
+    document.querySelectorAll('.chip').forEach(function (chip) {
+      chip.addEventListener('click', function () { document.getElementById('coeffs').value = chip.getAttribute('data-c'); runCheck(); });
+    });
+    window.addEventListener('load', runCheck);
   </script>
 </body>
 </html>
